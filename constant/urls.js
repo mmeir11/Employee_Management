@@ -1,0 +1,1 @@
+export const serverUrl = 'https://mmeir11-employee-management.zeet.app';
