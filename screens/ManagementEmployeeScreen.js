@@ -34,6 +34,7 @@ const ManagementEmployeeScreen = props => {
         const resData = await fetch(`${serverUrl}/employees`,{
             method: 'GET',
             mode: 'no-cors',
+            crossDomain: true,
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
