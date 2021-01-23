@@ -139,7 +139,7 @@ const LoginScreen = props => {
     return (
         <Pressable style={styles.root} onPress={() => Keyboard.dismiss()}>
             <View style={styles.inputContainer}>
-                <Text style={styles.title}>Login/Sign Up</Text>
+                <Text style={styles.title}>Login / Sign up</Text>
                 <TextInput placeholder='Email' value={email} onChangeText={text => setEmail(text)} keyboardType="email-address" style={styles.inputText} autoCapitalize='none' ></TextInput>
                 <TextInput placeholder='Password' onChangeText={text => setPassword(text)} secureTextEntry={true} style={styles.inputText} autoCapitalize='none'></TextInput>
 

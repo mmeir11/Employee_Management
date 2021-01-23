@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import Colors from '../constant/Colors';
+import { Ionicons } from '@expo/vector-icons';
 
 const EmployeeCell = props => {
 
@@ -11,13 +12,9 @@ const EmployeeCell = props => {
             <View style={styles.textContainer}>
                 <Text style={styles.text}> {currentEmployee.employee_name}</Text>
             </View>
-            {/* <View style={styles.textContainer}>
-                <Text style={styles.text}>Age: {currentEmployee.employee_age}</Text>
-            </View>
-            <View style={styles.textContainer}>
-                <Text style={styles.text}>Salary: {currentEmployee.employee_salary}</Text>
-            </View> */}
-
+            <TouchableOpacity style={styles.btnContainer} onPress={props.onPressDelete}>
+                <Ionicons name='ios-trash' size={30} color={Colors.lightGreen} style={styles.textBtn}></Ionicons>
+            </TouchableOpacity>
         </TouchableOpacity>)
 }
 
@@ -31,18 +28,37 @@ const styles = StyleSheet.create({
         height: 50,
         borderColor: '#ced4da',
         borderRadius: 8,
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.primary,
+        flexDirection: 'row'
     },
     textContainer: {
-        flex: 1,
-        alignSelf:'center',
-        justifyContent:'center'
+        flex: 3,
+        alignSelf: 'center',
+        justifyContent: 'flex-end',
+        paddingLeft: 10,
     },
     text: {
         fontSize: 15,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         color: '#343a40',
-    }
+    },
+    btnContainer: {
+        // flex: 1,
+        alignSelf: 'center',
+        // justifyContent: 'center',
+        // paddingHorizontal: 5,
+        marginHorizontal: 12,
+    },
+    textBtn: {
+        flex: 1,
+        textAlign:'center',
+        alignItems:'center',
+        justifyContent: 'center',
+        padding: 8,
+        paddingVertical: 5,
+        width: "100%",
+    },
+
 });
 
 export default EmployeeCell;

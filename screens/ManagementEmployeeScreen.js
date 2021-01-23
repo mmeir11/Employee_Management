@@ -14,7 +14,6 @@ const ManagementEmployeeScreen = props => {
 
     useEffect(() => {
         fetchEmployees();
-        // setEmployees(db.employees);
     }, []);
 
     useEffect(() => {
@@ -35,7 +34,6 @@ const ManagementEmployeeScreen = props => {
         setisLoading(true);
         const resData = await fetch(`${serverUrl}/employees`, {
             method: 'GET',
-            // mode: 'no-cors',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
@@ -75,6 +73,7 @@ const ManagementEmployeeScreen = props => {
                 Employee={item}
                 onPressEmployee={() => onPressEmployeeCell(item)}
                 onLongPressEmployee={() => onLongPressEmployeeCell(item)}
+                onPressDelete={() => onLongPressEmployeeCell(item)}
             />
         )
     }
@@ -114,10 +113,10 @@ const ManagementEmployeeScreen = props => {
             // if not fill all the fields, alert
             if (!newEmployee.employee_name || !newEmployee.employee_age || !newEmployee.employee_salary) {
                 return Alert.alert(
-                    "שגיאה",
-                    "נא מלא את כל פרטי העובד",
+                    "Alert",
+                    "Please fill in all the fields",
                     [
-                        { text: "אישור" }
+                        { text: "OK" }
                     ],
                     { cancelable: true }
                 )
@@ -165,10 +164,10 @@ const ManagementEmployeeScreen = props => {
             // if not fill all the fields, alert
             if (!Employee.employee_name || !Employee.employee_age || !Employee.employee_salary) {
                 return Alert.alert(
-                    "שגיאה",
-                    "נא מלא את כל פרטי העובד",
+                    "Alert",
+                    "Please fill in all the fields",
                     [
-                        { text: "אישור" }
+                        { text: "OK" }
                     ],
                     { cancelable: true }
                 )

@@ -36,10 +36,10 @@ const EmployeeDetailsScreen = props => {
     const onConfirmHandler = async () => {
         if (!employeeName || !employeeAge || !employeeSalary) {
             return Alert.alert(
-                "שגיאה",
-                "נא מלא את כל פרטי העובד",
+                "Alert",
+                "Please fill in all the fields",
                 [
-                    { text: "אישור" }
+                    { text: "OK" }
                 ],
                 { cancelable: true }
             )
