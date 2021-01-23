@@ -140,6 +140,14 @@ app.post('/signup', async (req, res) => {
         });
 });
 
+app.post('/signout', async (req, res) => {
+    auth.signOut().then(() => {
+        res.status(200).send("signout succussed");
+    }).catch((error) => {
+        res.status(400).send({error: error.message});
+    });
+});
+
 // Error middleware, when route not found
 app.use((req, res, next) => {
     const error = new Error('Not Found');

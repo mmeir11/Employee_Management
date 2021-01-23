@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity, ActivityIndicator} from 'react-native';
 import * as firebase from 'firebase';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import * as Facebook from 'expo-facebook';
@@ -11,18 +11,10 @@ const LoginScreen = props => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [currentUserId, setCurrentUserId] = useState('');
+    const [isLoading, setisLoading] = useState(false);
 
     useEffect(() => {
         Facebook.initializeAsync({ appId: '1328577777474619', appName: 'EmployeeManagment' });
-
-        // firebase.auth().onAuthStateChanged((user => {
-        //     // console.log("on change User", user);
-        //     if (user != null) {
-        //         // console.log("onAuthStateChanged");
-        //         // props.navigation.navigate('ManagementEmployeeScreen');
-        //     }
-        // }));
-
     }, [])
 
     const SignupUser = async (email, password) => {
@@ -41,7 +33,7 @@ const LoginScreen = props => {
             const resData = await response.json();
 
             if (response.status == 200) {
-                setCurrentUserId(resData.uid)
+                props.navigation.replace('ManagementEmployeeScreen');
             }
             else {
                 throw new Error(resData.error);
@@ -62,7 +54,9 @@ const LoginScreen = props => {
 
     const signupHandler = async () => {
         try {
-            SignupUser(email, password)
+            setisLoading(true);
+            await SignupUser(email, password)
+            setisLoading(false);
         }
         catch (error) {
             signoutUser();
@@ -85,7 +79,6 @@ const LoginScreen = props => {
             .then(async (user) => {
 
                 const idToken = await firebase.auth().currentUser.getIdToken(true);
-                console.log("IdToken", idToken);
 
                 const response = await fetch(`${serverUrl}/signin`, {
                     method: 'POST',
@@ -93,44 +86,34 @@ const LoginScreen = props => {
                         'Access-Control-Allow-Origin': '*',
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ idToken: idToken }) 
-                    // body: { idToken: idToken }
+                    body: JSON.stringify({ idToken: idToken })
                 });
 
-
-                const resData = await response.json();
-                console.log("resData", resData);
-                if (resData.status == 200) {
-                    console.log("resData.status == 200");
-
-                    // setCurrentUserId("resData.status == 200")
+                if (response.status == 200) {
+                    props.navigation.replace('ManagementEmployeeScreen');
                 }
-
-
             })
             .catch((err) => {
-                console.log(err);
+                throw new Error(err.message);
             })
-
-
-
     }
 
     const signinHandler = async () => {
         try {
-            SigninUser(email, password);
-
-        } catch (error) {
-            console.log(error);
-            // signoutUser();
-            // return Alert.alert(
-            //     'שגיאת התחברות',
-            //     error.message,
-            //     [
-            //         { text: "אישור" }
-            //     ],
-            //     { cancelable: true }
-            // );
+            setisLoading(true);            
+            await SigninUser(email, password);
+            setisLoading(false);
+        }
+        catch (error) {
+            signoutUser();
+            return Alert.alert(
+                'Alert',
+                error.message,
+                [
+                    { text: "OK" }
+                ],
+                { cancelable: true }
+            );
         }
     }
 
@@ -149,32 +132,6 @@ const LoginScreen = props => {
             await firebase.auth().signInWithCredential(credential).catch((error) => {
                 console.log("error", error);
             })
-            // firebase
-            //     .auth()
-            //     .signInWithPopup(provider)
-            //     .then((result) => {
-            //         var credential = result.credential;
-
-            //         // The signed-in user info.
-            //         var user = result.user;
-
-            //         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-            //         var accessToken = credential.accessToken;
-
-            //         // ...
-            //         console.log("facebookLoginHandler succuss", user);
-            //     })
-            //     .catch((error) => {
-            //         // Handle Errors here.
-            //         var errorCode = error.code;
-            //         var errorMessage = error.message;
-            //         // The email of the user's account used.
-            //         var email = error.email;
-            //         // The firebase.auth.AuthCredential type that was used.
-            //         var credential = error.credential;
-            //         console.log("errorMessage", errorMessage);
-            //         // ...
-            //     });
         }
     }
 
@@ -188,6 +145,11 @@ const LoginScreen = props => {
         });
     }
 
+    if (isLoading){
+        return <View style={styles.isLoadingContainer}>
+            <ActivityIndicator size="large" color="#00ff00" />
+        </View>
+    }
     return (
         <Pressable style={styles.root} onPress={() => Keyboard.dismiss()}>
             <View style={styles.inputContainer}>
@@ -216,6 +178,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.primary
+    },
+    isLoadingContainer:{
+        flex: 1,
+        justifyContent: "center"
     },
     inputContainer: {
         width: '80%',

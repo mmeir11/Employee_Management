@@ -24,6 +24,13 @@ const ManagementEmployeeScreen = props => {
                     onConfirm: addEmployee
                 });
             }} />),
+            headerLeft: () => (<Button title='Logout' onPress={() => {
+                
+                props.navigation.navigate('EmployeeDetailsScreen', {
+                    title: 'Add employee',
+                    onConfirm: addEmployee
+                });
+            }} />),
         })
 
     }, []);
