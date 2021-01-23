@@ -140,7 +140,7 @@ app.post('/signup', async (req, res) => {
         });
 });
 
-app.post('/signout', async (req, res) => {
+app.get('/signout', async (req, res) => {
     auth.signOut().then(() => {
         res.status(200).send("signout succussed");
     }).catch((error) => {

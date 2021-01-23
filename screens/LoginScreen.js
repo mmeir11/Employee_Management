@@ -135,15 +135,15 @@ const LoginScreen = props => {
         }
     }
 
-    const signoutUser = async () => {
-        firebase.auth().signOut().then(() => {
-            console.log("signout succuss");
-            // Sign-out successful.
-        }).catch((error) => {
-            // An error happened.
-            console.log("signout fail");
-        });
-    }
+    // const signoutUser = async () => {
+    //     firebase.auth().signOut().then(() => {
+    //         console.log("signout succuss");
+    //         // Sign-out successful.
+    //     }).catch((error) => {
+    //         // An error happened.
+    //         console.log("signout fail");
+    //     });
+    // }
 
     if (isLoading){
         return <View style={styles.isLoadingContainer}>

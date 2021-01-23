@@ -24,13 +24,7 @@ const ManagementEmployeeScreen = props => {
                     onConfirm: addEmployee
                 });
             }} />),
-            headerLeft: () => (<Button title='Logout' onPress={() => {
-                
-                props.navigation.navigate('EmployeeDetailsScreen', {
-                    title: 'Add employee',
-                    onConfirm: addEmployee
-                });
-            }} />),
+            headerLeft: () => (<Button title='Logout' onPress={signoutUser} />),
         })
 
     }, []);
@@ -53,6 +47,15 @@ const ManagementEmployeeScreen = props => {
             arrAllEmployees.push(employeesData[employeeKey])
         }
         setEmployees(arrAllEmployees);
+    }
+
+    const signoutUser = ()=>{
+        console.log("signoutUser");
+
+        
+
+
+        props.navigation.navigate('LoginScreen');
     }
 
     const renderEmployees = ({ item }) => {
