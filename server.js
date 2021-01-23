@@ -1,18 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const jsonServer = require('json-server'); //   json-server --watch db.json
-// const db = require('./Data/db');
 const app = express();
-// const config = require('./src/config');
 
 var admin = require("firebase-admin");
 var serviceAccount = require('./serviceAccountKey.json');
-// Initialize the app with a service account, granting admin privileges
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://employeemanagment-26f75-default-rtdb.firebaseio.com/"
 });
-
 var db = admin.database();
 var auth = admin.auth();
 
@@ -20,6 +15,16 @@ const hostname = '0.0.0.0';
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
+
+app.use((req, res, next)=>{
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authoriztion");
+    if (req.method === "OPTIONS") {
+        res.header("Access-Control-Allow-Methods", "PUT, POST, PATCH, DELETE, GET");
+        return res.status(200).json({});
+    }
+    next();
+})
 
 app.listen(PORT, hostname, () => {
     console.log(`Server running on http://localhost:${PORT}`)
