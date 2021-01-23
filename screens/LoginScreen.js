@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity, ActivityIndicator} from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
 import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import * as Facebook from 'expo-facebook';
 import Colors from '../constant/Colors';
 import { serverUrl } from '.././constant/urls';
+import Loading from '../component/Loading';
 
 const LoginScreen = props => {
 
@@ -19,7 +20,6 @@ const LoginScreen = props => {
 
     const SignupUser = async (email, password) => {
         try {
-            console.log("SignupUser", email, password);
 
             const response = await fetch(`${serverUrl}/signup`, {
                 method: 'POST',
@@ -40,7 +40,6 @@ const LoginScreen = props => {
             }
         }
         catch (error) {
-            signoutUser();
             return Alert.alert(
                 'Alert',
                 error.message,
@@ -56,10 +55,8 @@ const LoginScreen = props => {
         try {
             setisLoading(true);
             await SignupUser(email, password)
-            setisLoading(false);
         }
         catch (error) {
-            signoutUser();
             return Alert.alert(
                 'Alert',
                 error.message,
@@ -69,12 +66,13 @@ const LoginScreen = props => {
                 { cancelable: true }
             );
         }
+        finally {
+            setisLoading(false);
+        }
     }
 
     const SigninUser = async (email, password) => {
-        console.log("SigninUser", email, password);
 
-        // const resSigninData = 
         await firebase.auth().signInWithEmailAndPassword(email, password)
             .then(async (user) => {
 
@@ -100,13 +98,11 @@ const LoginScreen = props => {
 
     const signinHandler = async () => {
         try {
-            setisLoading(true);            
+            setisLoading(true);
             await SigninUser(email, password);
-            setisLoading(false);
         }
         catch (error) {
-            signoutUser();
-            return Alert.alert(
+            Alert.alert(
                 'Alert',
                 error.message,
                 [
@@ -114,6 +110,9 @@ const LoginScreen = props => {
                 ],
                 { cancelable: true }
             );
+        }
+        finally {
+            setisLoading(false);
         }
     }
 
@@ -130,25 +129,12 @@ const LoginScreen = props => {
             const credential = new firebase.auth.FacebookAuthProvider().credential(token);
 
             await firebase.auth().signInWithCredential(credential).catch((error) => {
-                console.log("error", error);
             })
         }
     }
 
-    // const signoutUser = async () => {
-    //     firebase.auth().signOut().then(() => {
-    //         console.log("signout succuss");
-    //         // Sign-out successful.
-    //     }).catch((error) => {
-    //         // An error happened.
-    //         console.log("signout fail");
-    //     });
-    // }
-
-    if (isLoading){
-        return <View style={styles.isLoadingContainer}>
-            <ActivityIndicator size="large" color="#00ff00" />
-        </View>
+    if (isLoading) {
+        return <Loading/>
     }
     return (
         <Pressable style={styles.root} onPress={() => Keyboard.dismiss()}>
@@ -178,10 +164,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.primary
-    },
-    isLoadingContainer:{
-        flex: 1,
-        justifyContent: "center"
     },
     inputContainer: {
         width: '80%',

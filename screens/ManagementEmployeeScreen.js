@@ -1,14 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, Button, Modal, Pressable, TextInput, Keyboard, Alert } from 'react-native';
 import EmployeeCell from '../component/EmployeeCell';
-// import EmployeeDetailsScreen from './EmployeeDetailsScreen';
-const db = require('../Data/db');
 import Colors from '../constant/Colors';
 import { serverUrl } from '.././constant/urls';
+import * as firebase from 'firebase';
+import Loading from '../component/Loading';
+
 
 const ManagementEmployeeScreen = props => {
 
     const [employees, setEmployees] = useState([]);
+    const [isLoading, setisLoading] = useState(false);
 
     useEffect(() => {
         fetchEmployees();
@@ -30,9 +32,8 @@ const ManagementEmployeeScreen = props => {
     }, []);
 
     const fetchEmployees = async () => {
-        console.log("fetchEmployees");
-
-        const resData = await fetch(`${serverUrl}/employees`,{
+        setisLoading(true);
+        const resData = await fetch(`${serverUrl}/employees`, {
             method: 'GET',
             // mode: 'no-cors',
             headers: {
@@ -41,21 +42,31 @@ const ManagementEmployeeScreen = props => {
             },
         });
         const employeesData = await resData.json();
-        console.log(employeesData);
+
         const arrAllEmployees = [];
         for (let employeeKey in employeesData) {
             arrAllEmployees.push(employeesData[employeeKey])
         }
         setEmployees(arrAllEmployees);
+        setisLoading(false);
+
     }
 
-    const signoutUser = ()=>{
-        console.log("signoutUser");
+    const signoutUser = async () => {
+        try {
+            setisLoading(true);
 
-        
-
-
-        props.navigation.navigate('LoginScreen');
+            firebase.auth().signOut().then(() => {
+                props.navigation.replace('LoginScreen');
+            }).catch((error) => {
+                throw new Error(error);
+            });
+        }
+        catch (error) {
+            Alert.alert("Alert", error.message);
+        } finally {
+            setisLoading(false);
+        }
     }
 
     const renderEmployees = ({ item }) => {
@@ -96,7 +107,8 @@ const ManagementEmployeeScreen = props => {
 
     const addEmployee = async (newEmployee) => {
         try {
-            console.log("addEmployee", newEmployee);
+            setisLoading(true);
+
             Keyboard.dismiss();
 
             // if not fill all the fields, alert
@@ -140,12 +152,14 @@ const ManagementEmployeeScreen = props => {
         catch (e) {
             Alert.alert("Alert", "Error, employee not created");
         }
+        finally {
+            setisLoading(false);
+        }
     }
 
     const editEmployee = async (Employee) => {
         try {
-            console.log("editEmployee", Employee);
-            console.log("Employee.id", Employee.id);
+            setisLoading(true);
             Keyboard.dismiss();
 
             // if not fill all the fields, alert
@@ -187,11 +201,15 @@ const ManagementEmployeeScreen = props => {
         catch (e) {
             Alert.alert("Alert", "Error to update employee");
         }
+        finally {
+            setisLoading(false);
+        }
     }
 
     const deleteEmployee = async (Employee) => {
         try {
-            console.log("deleteEmployee", Employee, Employee.id);
+            setisLoading(true);
+
             Keyboard.dismiss();
 
             const response = await fetch(`${serverUrl}/employees/delete/${Employee.id}`, {
@@ -221,9 +239,14 @@ const ManagementEmployeeScreen = props => {
         catch (err) {
             Alert.alert("Alert", "Error deleting employee");
         }
+        finally{
+            setisLoading(true);
+        }
     }
 
-
+    if (isLoading) {
+        return <Loading />
+    }
     return (
         <View style={styles.root}>
             <FlatList

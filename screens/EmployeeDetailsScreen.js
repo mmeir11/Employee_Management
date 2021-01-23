@@ -17,7 +17,7 @@ const EmployeeDetailsScreen = props => {
         // if employee exist-edit mode, set his details
         if (props.route.params.employee) {
             const currentEmployee = props.route.params.employee;
-            console.log("currentEmployee", currentEmployee.employee_name);
+
             setEmployeeName(currentEmployee.employee_name);
             setEmployeeAge(currentEmployee.employee_age);
             setEmployeeSalary(currentEmployee.employee_salary);
@@ -60,11 +60,10 @@ const EmployeeDetailsScreen = props => {
         <Pressable style={styles.root} onPress={() => { Keyboard.dismiss() }}>
             <View style={styles.addEmployeeModel}>
                 <Text style={styles.title}>{props.route.params.title}</Text>
-                <TextInput placeholder='שם מלא' value={employeeName} onChangeText={text => setEmployeeName(text)} style={styles.inputText} autoCapitalize='none' ></TextInput>
-                <TextInput placeholder="גיל" value={employeeAge} onChangeText={text => setEmployeeAge(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
-                <TextInput placeholder="שכר" value={employeeSalary} onChangeText={text => setEmployeeSalary(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
-                <Button title='אישור' onPress={onConfirmHandler} name='loginBtn'></Button>
-                {/* <Button title='ביטול' onPress={() => onCancel ?? setModalVisible(false)} name='loginBtn'></Button> */}
+                <TextInput placeholder='Full name' value={employeeName} onChangeText={text => setEmployeeName(text)} style={styles.inputText} autoCapitalize='none' ></TextInput>
+                <TextInput placeholder="Age" value={employeeAge} onChangeText={text => setEmployeeAge(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
+                <TextInput placeholder="Salary" value={employeeSalary} onChangeText={text => setEmployeeSalary(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
+                <Button title='Confirm' onPress={onConfirmHandler} name='loginBtn'></Button>
             </View>
         </Pressable>
 

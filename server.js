@@ -32,15 +32,11 @@ app.listen(PORT, hostname, () => {
 });
 
 app.get('/', (req, res) => {
-    console.log(req.body)
     res.send("Hello");
 });
 
 app.get('/employees', async (req, res) => {
-    console.log('/employees');
-    // res.send(db);
     const resData = await db.ref('employees/').once('value');
-    // const data = await resData.snapshot.val();
     res.send(resData);
 });
 
@@ -120,7 +116,6 @@ app.post('/signin', async (req, res) => {
     auth.verifyIdToken(idToken)
         .then((decodedToken) => {
             const uid = decodedToken.uid;
-            // console.log("SUCCUSS", uid);
             res.status(200).send("SUCCUSS");
         })
         .catch((error) => {
@@ -141,10 +136,11 @@ app.post('/signup', async (req, res) => {
 });
 
 app.get('/signout', async (req, res) => {
+    
     auth.signOut().then(() => {
         res.status(200).send("signout succussed");
     }).catch((error) => {
-        res.status(400).send({error: error.message});
+        res.status(400).send({ error: error.message });
     });
 });
 
@@ -158,6 +154,6 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
     res.status(error.status || 500);
     res.json({
-        error:  error.message
+        error: error.message
     })
 });
