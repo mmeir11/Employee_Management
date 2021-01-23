@@ -14,7 +14,6 @@ var auth = admin.auth();
 const hostname = '0.0.0.0';
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const PORT = process.env.PORT || 3000;
-app.use(bodyParser.json());
 
 app.use((req, res, next)=>{
     res.header("Access-Control-Allow-Origin", "*");
@@ -25,6 +24,8 @@ app.use((req, res, next)=>{
     }
     next();
 })
+
+app.use(bodyParser.json());
 
 app.listen(PORT, hostname, () => {
     console.log(`Server running on http://localhost:${PORT}`)
@@ -138,3 +139,12 @@ app.post('/signup', async (req, res) => {
             res.status(400).send({ error: error.message });
         });
 });
+
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error: {
+            message: error.message
+        }
+    })
+})
