@@ -33,14 +33,14 @@ const ManagementEmployeeScreen = props => {
 
         const resData = await fetch(`${serverUrl}/employees`,{
             method: 'GET',
-            mode: 'no-cors',
+            // mode: 'no-cors',
             headers: {
                 'Access-Control-Allow-Origin': '*',
                 'Content-Type': 'application/json'
             },
         });
         const employeesData = await resData.json();
-
+        console.log(serverUrl);
         const arrAllEmployees = [];
         for (let employeeKey in employeesData) {
             arrAllEmployees.push(employeesData[employeeKey])
