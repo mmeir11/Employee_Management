@@ -10,8 +10,8 @@ const Stack = createStackNavigator();
 
 const Navigator = () => (
     <Stack.Navigator screenOptions={{ headerShown: true }}>
-        <Stack.Screen name="ManagementEmployeeScreen" component={ManagementEmployeeScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="ManagementEmployeeScreen" component={ManagementEmployeeScreen} />
         <Stack.Screen name="EmployeeDetailsScreen" component={EmployeeDetailsScreen} />
     </Stack.Navigator>
 )

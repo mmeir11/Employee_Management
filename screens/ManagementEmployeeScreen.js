@@ -40,7 +40,7 @@ const ManagementEmployeeScreen = props => {
             },
         });
         const employeesData = await resData.json();
-        console.log(serverUrl);
+        console.log(employeesData);
         const arrAllEmployees = [];
         for (let employeeKey in employeesData) {
             arrAllEmployees.push(employeesData[employeeKey])

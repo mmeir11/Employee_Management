@@ -120,8 +120,8 @@ app.post('/signin', async (req, res) => {
     auth.verifyIdToken(idToken)
         .then((decodedToken) => {
             const uid = decodedToken.uid;
-            console.log("SUCCUSS", uid);
-            res.status(200).send(uid);
+            // console.log("SUCCUSS", uid);
+            res.status(200).send("SUCCUSS");
         })
         .catch((error) => {
             res.status(400).send({ error: error.message });
@@ -140,18 +140,16 @@ app.post('/signup', async (req, res) => {
         });
 });
 
-// // Error middleware, when route not found
-// app.use((req, res, next) => {
-//     const error = new Error('Not Found');
-//     error.status = 404;
-//     next(error);
-// });
+// Error middleware, when route not found
+app.use((req, res, next) => {
+    const error = new Error('Not Found');
+    error.status = 404;
+    next(error);
+});
 
-// app.use((error, req, res, next) => {
-//     res.status(error.status || 500);
-//     res.json({
-//         error: {
-//             message: error.message
-//         }
-//     })
-// });
+app.use((error, req, res, next) => {
+    res.status(error.status || 500);
+    res.json({
+        error:  error.message
+    })
+});

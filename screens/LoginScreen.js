@@ -15,13 +15,13 @@ const LoginScreen = props => {
     useEffect(() => {
         Facebook.initializeAsync({ appId: '1328577777474619', appName: 'EmployeeManagment' });
 
-        firebase.auth().onAuthStateChanged((user => {
-            // console.log("on change User", user);
-            if (user != null) {
-                console.log("onAuthStateChanged");
-                // props.navigation.navigate('ManagementEmployeeScreen');
-            }
-        }));
+        // firebase.auth().onAuthStateChanged((user => {
+        //     // console.log("on change User", user);
+        //     if (user != null) {
+        //         // console.log("onAuthStateChanged");
+        //         // props.navigation.navigate('ManagementEmployeeScreen');
+        //     }
+        // }));
 
     }, [])
 
@@ -40,15 +40,11 @@ const LoginScreen = props => {
 
             const resData = await response.json();
 
-            console.log("response.status", response.status);
-            console.log("response.error", resData.error);
-            // console.log("response", response);
-
             if (response.status == 200) {
                 setCurrentUserId(resData.uid)
             }
             else {
-                // throw new Error(response);
+                throw new Error(resData.error);
             }
         }
         catch (error) {
@@ -84,33 +80,43 @@ const LoginScreen = props => {
     const SigninUser = async (email, password) => {
         console.log("SigninUser", email, password);
 
-        const resSigninData = await firebase.auth().signInWithEmailAndPassword(email, password);
-        const idToken = await firebase.auth().currentUser.getIdToken(/* forceRefresh */ true);
-        // console.log("resSigninData", resSigninData);
-        console.log("IdToken", idToken);
+        // const resSigninData = 
+        await firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(async (user) => {
 
-        const response = await fetch(`${serverUrl}/signin`, {
-            method: 'POST',
-            headers: {
-                'Access-Control-Allow-Origin': '*',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ idToken: idToken }) // body data type must match "Content-Type" header
-        });
+                const idToken = await firebase.auth().currentUser.getIdToken(true);
+                console.log("IdToken", idToken);
+
+                const response = await fetch(`${serverUrl}/signin`, {
+                    method: 'POST',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ idToken: idToken }) 
+                    // body: { idToken: idToken }
+                });
 
 
-        const resData = await response.json();
-        console.log("resData", resData);
-        if (resData.status == 200) {
-            console.log("resData.status == 200");
+                const resData = await response.json();
+                console.log("resData", resData);
+                if (resData.status == 200) {
+                    console.log("resData.status == 200");
 
-            // setCurrentUserId("resData.status == 200")
-        }
+                    // setCurrentUserId("resData.status == 200")
+                }
+
+
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+
 
 
     }
 
-    const loginHandler = async () => {
+    const signinHandler = async () => {
         try {
             SigninUser(email, password);
 
@@ -189,7 +195,7 @@ const LoginScreen = props => {
                 <TextInput placeholder='Email' value={email} onChangeText={text => setEmail(text)} keyboardType="email-address" style={styles.inputText} autoCapitalize='none' ></TextInput>
                 <TextInput placeholder='Password' onChangeText={text => setPassword(text)} secureTextEntry={true} style={styles.inputText} autoCapitalize='none'></TextInput>
 
-                <TouchableOpacity onPress={loginHandler} style={styles.BtnLogin} >
+                <TouchableOpacity onPress={signinHandler} style={styles.BtnLogin} >
                     <Text>Login</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={signupHandler} style={{ ...styles.BtnLogin, backgroundColor: '#e9ecef' }}>
