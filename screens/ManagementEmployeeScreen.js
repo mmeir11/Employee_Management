@@ -285,11 +285,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgrey',
         // backgroundColor: Colors.primary,
         borderRadius: 20,
-        margin: 12,
+        margin: 8,
         textAlign: 'center'
     },
     btnContainer: {
-        padding: 12,
+        padding: 10,
     },
 });
 

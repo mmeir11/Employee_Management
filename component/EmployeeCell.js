@@ -22,41 +22,31 @@ const styles = StyleSheet.create({
     root: {
         borderWidth: 1,
         padding: 2,
-        textAlign: 'center',
-        alignSelf: 'center',
         width: '100%',
         height: 50,
         borderColor: '#ced4da',
         borderRadius: 8,
         backgroundColor: Colors.primary,
-        flexDirection: 'row'
+        flexDirection: 'row',
+       justifyContent:'space-between',
+
     },
     textContainer: {
-        flex: 3,
         alignSelf: 'center',
-        justifyContent: 'flex-end',
         paddingLeft: 10,
     },
     text: {
         fontSize: 15,
-        // fontWeight: 'bold',
         color: '#343a40',
     },
     btnContainer: {
-        // flex: 1,
-        alignSelf: 'center',
-        // justifyContent: 'center',
-        // paddingHorizontal: 5,
         marginHorizontal: 12,
+        // borderWidth: 1,
+        
     },
     textBtn: {
-        flex: 1,
-        textAlign:'center',
-        alignItems:'center',
-        justifyContent: 'center',
-        padding: 8,
         paddingVertical: 5,
-        width: "100%",
+        padding:8,
     },
 
 });
