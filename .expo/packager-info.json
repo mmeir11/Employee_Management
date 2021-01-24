@@ -1,10 +1,10 @@
 {
-  "devToolsPort": 19003,
-  "expoServerPort": 19004,
-  "packagerPort": 19004,
+  "devToolsPort": 19002,
+  "expoServerPort": 19000,
+  "packagerPort": 19000,
   "webpackServerPort": null,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null
+  "expoServerNgrokUrl": "https://3b-h93.mmeir11.employeemanagement.exp.direct",
+  "packagerNgrokUrl": "https://packager.3b-h93.mmeir11.employeemanagement.exp.direct",
+  "ngrokPid": 13560
 }

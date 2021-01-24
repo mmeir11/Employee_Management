@@ -5,15 +5,19 @@ import * as Facebook from 'expo-facebook';
 import Colors from '../constant/Colors';
 import { serverUrl } from '.././constant/urls';
 import Loading from '../component/Loading';
+import * as Google from 'expo-google-app-auth'
+
 
 const LoginScreen = props => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [userGoogleIngo, setUserGoogleIngo] = useState('');
     const [isLoading, setisLoading] = useState(false);
 
     useEffect(() => {
         Facebook.initializeAsync({ appId: '1328577777474619', appName: 'EmployeeManagment' });
+
     }, [])
 
     useEffect(() => {
@@ -121,6 +125,7 @@ const LoginScreen = props => {
     }
 
     const facebookLoginHandler = async () => {
+        console.log("facebookLoginHandler");
 
         const { type, token } = await
             Facebook.logInWithReadPermissionsAsync(
@@ -129,13 +134,59 @@ const LoginScreen = props => {
                 }
             );
 
-        if (type == 'succuss') {
-            const credential = new firebase.auth.FacebookAuthProvider().credential(token);
+        // console.log(type );
+        console.log(token);
 
-            await firebase.auth().signInWithCredential(credential).catch((error) => {
-            })
+        if (type == 'success') {
+            var credential = new firebase.auth().FacebookAuthProvider().credential({ accessToken: token });
+
+            // console.log("credential.oauthAccessToken", credential.oauthAccessToken);
+            // console.log(credential);
+
+            firebase.auth().signInWithCredential(credential)
+                .then(() => {
+                    // console.log(s);
+                    console.log("Facebook succuss");
+                })
+                .catch((error) => {
+                    console.log("error", error);
+                })
+
         }
     }
+
+    const googleLogin = async () => {
+        try {
+            const result = await Google.logInAsync({
+                // behavior: 'web',
+                androidClientId: "701219857684-ksnqa2diggtq11246fhm2dktvajp3ph3.apps.googleusercontent.com",
+                iosClientId: "701219857684-vdkem86kiv88rcnqk2q3tq0ssml1t5t9.apps.googleusercontent.com",
+                scopes: ["profile", "email"]
+
+            })
+            if (result.type === "success") {
+                const credential = firebase.auth.GoogleAuthProvider.credential(result.idToken, result.accessToken);
+                
+                // firebase.auth().signInAndRetrieveDataWithCredential(credential).then(function (result) {
+                firebase.auth().signInWithCredential(credential).then(function (result) {
+                    console.log("SUCCSESS");
+                });
+                props.navigation.replace('ManagementEmployeeScreen');
+            } else {
+                console.log("cancelled")
+            }
+        } catch (error) {
+            Alert.alert(
+                'Alert',
+                error.message,
+                [
+                    { text: "OK" }
+                ],
+                { cancelable: true }
+            );
+        }
+    }
+
 
     if (isLoading) {
         return <Loading />
@@ -153,8 +204,9 @@ const LoginScreen = props => {
                 <TouchableOpacity onPress={signupHandler} style={{ ...styles.BtnLogin, backgroundColor: '#e9ecef' }}>
                     <Text>Sign up</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={facebookLoginHandler} style={{ ...styles.BtnLogin, backgroundColor: '#3b5998', }} >
-                    <Text style={{ color: 'white' }}>Sign in with Facebook</Text>
+
+                <TouchableOpacity onPress={googleLogin} style={{ ...styles.BtnLogin, backgroundColor: '#000', }} >
+                    <Text style={{ color: 'white' }}>Sign in with Google</Text>
                 </TouchableOpacity>
 
             </View>
