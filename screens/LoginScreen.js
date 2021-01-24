@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as firebase from 'firebase';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
 import * as Facebook from 'expo-facebook';
 import Colors from '../constant/Colors';
 import { serverUrl } from '.././constant/urls';
@@ -11,12 +10,17 @@ const LoginScreen = props => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [currentUserId, setCurrentUserId] = useState('');
     const [isLoading, setisLoading] = useState(false);
 
     useEffect(() => {
         Facebook.initializeAsync({ appId: '1328577777474619', appName: 'EmployeeManagment' });
     }, [])
+
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerShown: false,
+        });
+    }, []);
 
     const SignupUser = async (email, password) => {
         try {
@@ -134,7 +138,7 @@ const LoginScreen = props => {
     }
 
     if (isLoading) {
-        return <Loading/>
+        return <Loading />
     }
     return (
         <Pressable style={styles.root} onPress={() => Keyboard.dismiss()}>

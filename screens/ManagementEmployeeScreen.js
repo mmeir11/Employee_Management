@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, Modal, Pressable, TextInput, Keyboard, Alert } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Button, Modal, Pressable, TextInput, Keyboard, Alert, TouchableOpacity } from 'react-native';
 import EmployeeCell from '../component/EmployeeCell';
 import Colors from '../constant/Colors';
 import { serverUrl } from '.././constant/urls';
@@ -19,13 +19,25 @@ const ManagementEmployeeScreen = props => {
     useEffect(() => {
         props.navigation.setOptions({
             headerTitle: "Employees",
-            headerRight: () => (<Button title='Add' onPress={() => {
-                props.navigation.navigate('EmployeeDetailsScreen', {
-                    title: 'Add employee',
-                    onConfirm: addEmployee
-                });
-            }} />),
-            headerLeft: () => (<Button title='Logout' onPress={signoutUser} />),
+            headerTintColor: '#000',
+            headerStyle: {
+                backgroundColor: Colors.lightGray
+            },
+            headerRight: () => (
+                <TouchableOpacity style={styles.btnContainer}
+                    onPress={() => {
+                        props.navigation.navigate('EmployeeDetailsScreen', {
+                            title: 'Add employee',
+                            onConfirm: addEmployee
+                        });
+                    }} >
+                    <Text>Add</Text>
+                </TouchableOpacity>),
+            headerLeft: () => (
+                <TouchableOpacity style={styles.btnContainer}
+                    onPress={signoutUser} >
+                    <Text>Logout</Text>
+                </TouchableOpacity>),
         })
 
     }, []);
@@ -238,7 +250,7 @@ const ManagementEmployeeScreen = props => {
         catch (err) {
             Alert.alert("Alert", "Error deleting employee");
         }
-        finally{
+        finally {
             setisLoading(true);
         }
     }
@@ -275,6 +287,9 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 12,
         textAlign: 'center'
+    },
+    btnContainer: {
+        padding: 12,
     },
 });
 

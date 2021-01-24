@@ -12,7 +12,6 @@ var db = admin.database();
 var auth = admin.auth();
 
 const hostname = '0.0.0.0';
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const PORT = process.env.PORT || 3000;
 
 app.use((req, res, next) => {

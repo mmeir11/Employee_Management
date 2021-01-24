@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert } from 'react-native';
-// import * as firebase from 'firebase';
-import ExpoStatusBar from 'expo-status-bar/build/ExpoStatusBar';
-import * as Facebook from 'expo-facebook';
-
+import { View, Text, StyleSheet, TextInput, Button, Pressable, Keyboard, Alert, TouchableOpacity } from 'react-native';
 import Colors from '../constant/Colors';
 
 const EmployeeDetailsScreen = props => {
@@ -23,11 +19,19 @@ const EmployeeDetailsScreen = props => {
             setEmployeeSalary(currentEmployee.employee_salary);
             setEmployeeId(currentEmployee.id)
         }
-        else{ // if employee not exist-create mode, generate new id
+        else { // if employee not exist-create mode, generate new id
             var id = generateID();
             setEmployeeId(id);
         }
     }, []);
+
+
+    useEffect(() => {
+        props.navigation.setOptions({
+            headerShown: false,
+        })
+    }, []);
+
 
     const generateID = () => {
         return `${new Date().getTime()}`;
@@ -44,7 +48,7 @@ const EmployeeDetailsScreen = props => {
                 { cancelable: true }
             )
         }
-        
+
         const currentEmployee = {
             employee_name: employeeName,
             employee_age: employeeAge,
@@ -58,12 +62,18 @@ const EmployeeDetailsScreen = props => {
 
     return (
         <Pressable style={styles.root} onPress={() => { Keyboard.dismiss() }}>
-            <View style={styles.addEmployeeModel}>
+            <View style={styles.inputContainer}>
                 <Text style={styles.title}>{props.route.params.title}</Text>
                 <TextInput placeholder='Full name' value={employeeName} onChangeText={text => setEmployeeName(text)} style={styles.inputText} autoCapitalize='none' ></TextInput>
                 <TextInput placeholder="Age" value={employeeAge} onChangeText={text => setEmployeeAge(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
                 <TextInput placeholder="Salary" value={employeeSalary} onChangeText={text => setEmployeeSalary(text)} keyboardType="numeric" style={styles.inputText} autoCapitalize='none'></TextInput>
-                <Button title='Confirm' onPress={onConfirmHandler} name='loginBtn'></Button>
+                
+                <TouchableOpacity onPress={onConfirmHandler} style={styles.btn} >
+                    <Text>Confirm</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => props.navigation.goBack()} style={{ ...styles.btn, backgroundColor: '#e9ecef' }}>
+                    <Text>Cancel</Text>
+                </TouchableOpacity>
             </View>
         </Pressable>
 
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
         // backgroundColor: '#dee2e6',
 
     },
-    addEmployeeModel: {
+    inputContainer: {
         width: '80%',
         height: '60%',
         backgroundColor: 'white',
@@ -91,7 +101,6 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: Colors.lightGray,
         backgroundColor: Colors.lightGray
-
     },
     title: {
         fontSize: 20,
@@ -104,6 +113,17 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         margin: 12,
         textAlign: 'center'
+    },
+    btn: {
+        width: '60%',
+        padding: 8,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: Colors.lightGray,
+        alignItems: 'center',
+        // backgroundColor: '#e8eddf',
+        backgroundColor: Colors.offright,
+        margin: 5,
     },
 });
 
